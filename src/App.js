@@ -3,6 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Route, Link } from 'react-router-dom'
 import BookCard from './BookCard'
+import Search from './Search'
 class BooksApp extends React.Component {
   state = {
     /**
@@ -24,21 +25,17 @@ class BooksApp extends React.Component {
     }
 
   changeShelf = (changedBook, shelf) => {
-    BooksAPI.update(changedBook, shelf).then(response => {
-      // set shelf for new or updated book
       changedBook.shelf = shelf;
-      // update state with changed book
       this.setState(prevState => ({
         books: prevState.books
-          // remove updated book from array
           .filter(book => book.id !== changedBook.id)
-          // add updated book to array
           .concat(changedBook)
       }));
-    });
+      BooksAPI.update(changedBook, shelf).then(result => console.log(result))
   };
 
   render() {
+    const {books} = this.state
     return (
       <div className="app">
         
@@ -59,7 +56,7 @@ class BooksApp extends React.Component {
                    {
                        this.state.books.map((book)=>(
                          (book.shelf === "currentlyReading") && (
-                         <BookCard key={book.id} book={book} changeShelf = {this.changeShelf}></BookCard>
+                         <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf}></BookCard>
                          )
                      ))
                    }
@@ -74,7 +71,7 @@ class BooksApp extends React.Component {
                     {
                         this.state.books.map((book)=>(
                           (book.shelf === "wantToRead") && (
-                          <BookCard key={book.id} book={book} onChangeSelf = {this.changeShelf} ></BookCard>
+                          <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf} ></BookCard>
                           )
                       ))
                     }
@@ -89,7 +86,7 @@ class BooksApp extends React.Component {
                     {
                         this.state.books.map((book)=>(
                           (book.shelf === "read") && (
-                          <BookCard key={book.id} book={book} onChangeSelf = {this.changeShelf}></BookCard>
+                          <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf}></BookCard>
                           )
                       ))
                     }
@@ -109,28 +106,11 @@ class BooksApp extends React.Component {
         />
          
          <Route path='/search' render={() => (
-           <div className="search-books">
-           <div className="search-books-bar">
-             <Link className="close-search" to='/' >Close</Link>
-             <div className="search-books-input-wrapper">
-             
-               <input type="text" placeholder="Search by title or author"/>
-             
-             </div>
-           </div>
-           <div className="search-books-results">
-             <ol className="books-grid">
-               {
-
-               this.state.books.map((book)=>(
-                <BookCard key={book.id} book={book} onChangeSelf = {this.changeShelf}></BookCard>
-               ))
-              
-              }
-             </ol>
-
-           </div>
-         </div>
+           <Search
+       
+              changeShelf = {this.changeShelf}
+              shelvedBooks = {books}
+           />
         )}
         />
         
