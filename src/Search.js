@@ -10,9 +10,11 @@ class Search extends React.Component{
 
     state = {
         query: '',
-        books: []
+        books: [],
+        errorMessage:false
     }
 
+    
     updateQuery = (query) =>{
         //updates state of the query
         this.setState(() => ({
@@ -26,11 +28,13 @@ class Search extends React.Component{
             //if books are found
             books.length > 0 
             //update book list displaying
-            ? this.setState(()=>({books : books}))
+            ? this.setState(()=>({books : books, errorMessage: false}))
             //display nothing
-            : this.setState(()=>({books : []}))
-          
+            : this.setState(()=>({books : [], errorMessage: true}))
         })
+        }
+        else if(query ===""){
+            this.setState(()=>({books : [], errorMessage: false}))
         }
         
     }
@@ -39,7 +43,7 @@ class Search extends React.Component{
       
         render(){
             const {changeShelf, shelvedBooks} = this.props
-            const {query, books} = this.state
+            const {query, books, errorMessage} = this.state
     
             return(
                 <div className="search-books">
@@ -56,7 +60,6 @@ class Search extends React.Component{
                     </div>
                     <div className="search-books-results">
                         <ol className="books-grid">
-                            {console.log(books)}
                         {
 
                         books.map((book)=>(
@@ -66,6 +69,9 @@ class Search extends React.Component{
                         }
                         </ol>
 
+                        {errorMessage && (
+                            <h3>Books not found</h3>
+                        )}
                     </div>
                 </div>
             )

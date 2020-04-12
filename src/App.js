@@ -36,6 +36,13 @@ class BooksApp extends React.Component {
 
   render() {
     const {books} = this.state
+
+    const shelves = {
+      currentlyReading: ['Currently Reading', 'currentlyReading'],
+      wantToRead: ['Want to Read', 'wantToRead'],
+      read: ['Read', 'read']
+    }
+
     return (
       <div className="app">
         
@@ -47,53 +54,24 @@ class BooksApp extends React.Component {
            </div>
            <div className="list-books-content">
              <div>
-             
-                 {/* Currently Reading */}
-                 <div className="bookshelf">
-                 <h2 className="bookshelf-title">Currently Reading</h2>
-                 <div className="bookshelf-books">
-                   <ol className="books-grid">
-                   {
-                       this.state.books.map((book)=>(
-                         (book.shelf === "currentlyReading") && (
-                         <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf}></BookCard>
-                         )
-                     ))
-                   }
-                   </ol>
-                 </div>
-               </div>
-                   {/* Want to Read  */}
-                <div className="bookshelf">
-                <h2 className="bookshelf-title">Want to Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                    {
-                        this.state.books.map((book)=>(
-                          (book.shelf === "wantToRead") && (
-                          <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf} ></BookCard>
-                          )
-                      ))
-                    }
-                    </ol>
+                 {
+                   Object.entries(shelves).map(([key, value])=>(
+                    <div className="bookshelf">
+                    <h2 className="bookshelf-title">{value[0]}</h2>
+                    <div className="bookshelf-books">
+                      <ol className="books-grid">
+                      {
+                          this.state.books.map((book)=>(
+                            (book.shelf === value[1]) && (
+                            <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf}></BookCard>
+                            )
+                        ))
+                      }
+                      </ol>
+                    </div>
                   </div>
-                </div>
-                    {/* Read */}
-                <div className="bookshelf">
-                <h2 className="bookshelf-title">Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-                    {
-                        this.state.books.map((book)=>(
-                          (book.shelf === "read") && (
-                          <BookCard key={book.id} book={book} books = {books} changeShelf = {this.changeShelf}></BookCard>
-                          )
-                      ))
-                    }
-                    </ol>
-                  </div>
-                </div>   
-               
+                   ))
+                 }               
              </div>
            </div>
 
